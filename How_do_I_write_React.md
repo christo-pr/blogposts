@@ -1,5 +1,5 @@
 <div align="center">
-<h1> React - Bootstraping your app</h1>
+<h1>How do I write React</h1>
 </div>
 
 > Style guide and best practices to write React based on my experience :D
