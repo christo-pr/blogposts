@@ -70,7 +70,7 @@ npx <command>
 
 You can use `npm` to download React and start your project from scratch (configure webpack to do all the fancy stuff
 you are used to have 'out-of-the-box') or you can use [create-react-app](https://github.com/facebook/create-react-app).
-I like to keep it simple (when is possible), so I use it to bootstrap mostly of my React projects.
+This library allow you to bootstrap a React project. It all the configurations needed for a rapid development with React (like hot reload, ES6 support, etc...)
 
 One of the good things about CRA, is the abilty to have all the latest patches and features with a single bump
 version of your `react-scripts` dependency (which is what CRA uses), so you don't have to worry for this anymore.
@@ -183,14 +183,14 @@ We can point up some things here:
 
 
 ##### 1) It's a functional component instead of a class component:
-  I used to use class components all the time, so that I have my component's state and all most all of them use `componentDidMount` and all the stuff, but
-  since hooks came out, all my components start to shrink a lot, and I kinda like it, so I haven't need to use a class component again since then.
+  I used to use class components all the time, so that I could have an state and control everything with the lifecycles of React but
+  since hooks came out, all my components started to shrink a lot, and I liked it, so I haven't need to use a class component again since then.
 
 
 ##### 2) It does nothing but render a main container component:
   I always try to keep this component clean, unless I need some initial data that's coming from outside (i.e. API calls). So this will only return the main container, which
   will have all the bussines logic.
-  I often use this function to wrap my app with any needed HOC, like react router or any css theme, so that's available for any component inside.
+  I often use this function to wrap my app with a High Order Component (HOC), like react router or any css theme, so that's available for any chidlren component.
 
 
 ##### 3) Export a defult function which is the actual component
