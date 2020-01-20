@@ -1,3 +1,3 @@
 # My Blogspost
 
-* [React - the good parts](https://github.com/christo-pr/blogposts/blob/master/React_the_good_parts.md)
+* [How do I write React](https://github.com/christo-pr/blogposts/blob/master/How_do_I_write_React.md)
