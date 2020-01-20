@@ -6,6 +6,7 @@
 
 
 This repo shows the programming style I use to write React components, all based on my experience working with this library.
+
 Feel free to use it or change it at your own will.
 
 Enjoy!
@@ -13,32 +14,35 @@ Enjoy!
 
 # Javascript linter
 
+Even though this post is about React, we can't write clean React code, without writing clean Javascript code first
+
 Every time I write Javascript I like to have a linter to check some basic style rules to make code.
 I used to use [ESLint](https://eslint.org), which is pretty common among js developers, but then I found
-[Standard](https://standardjs.com) and became my main linter.
+[Standard](https://standardjs.com), my favorite js linter.
 
 It has some special (some would say ugly) rules (like no semi-colon, or the lack of ability to change any rule),
-but I found my code cleaner and looks better (at least for me).
+but I found my code cleaner and looks better (at least for me) when using it.
 
-Standard has some features that I like and make it easy to use:
+Standard has some features that make it easy to use:
 
 - **You don't need a configuration file to start using the linter.**
 
     There's a lot of discussions about programming style in js (tabs vs spaces, semi-colons) that's why I like
-  standard, because it picks some 'standard' rules and that all you have, no more, no less
+  standard, because it picks some 'standard' rules and that's all you have, no more, no less therefore no more discussions.
 
 ------
 
 - **Automatically fix your problems (just use the `--fix` flag).**
 
-    I like to have 2 npm scripts: `npm run lint` and `npm run lint:fix`, but I always try to fix the problems
-  manually.
+    I always create 2 npm scripts: `npm run lint` and `npm run lint:fix`.
+  The first script is what I use more often, that shows all the errors with information about the line and file where they occurr
+  The second script is just to automatically fix the common errors, but I still try to manually fix as much as possible.
 
 ------
 
 - **Git pre-commmit hook.**
 
-    Sometimes I really like to be strict about the programming style, so I create a
+    Sometimes when I'm more strict about the programming style, I create a
   [pre-commit](https://standardjs.com/#is-there-a-git-pre-commit-hook) hook for the project, that can save
   some review time.
 
@@ -58,7 +62,7 @@ This lib allows you to **execute** the package binaries files, it executes the `
 
 #### Why `npx` instead of `npm`?
 
-Honestly, I just don't like to struggle with all the versions and deprecations stuff, with `npx` I ensure that the library that I'm using is on the latest stable version,
+Honestly, I just don't like to struggle with all the versions and deprecations stuff, with `npx` I ensure that the library that I'm using is on the latest stable version.
 
 ```bash
 npx <command>
@@ -68,14 +72,14 @@ You can use `npm` to download React and start your project from scratch (configu
 you are used to have 'out-of-the-box') or you can use [create-react-app](https://github.com/facebook/create-react-app).
 I like to keep it simple (when is possible), so I use it to bootstrap mostly of my React projects.
 
-One of the things I like about CRA, is the abilty to have all the latest patches and features with a single bump
+One of the good things about CRA, is the abilty to have all the latest patches and features with a single bump
 version of your `react-scripts` dependency (which is what CRA uses), so you don't have to worry for this anymore.
 CRA also allows you to have your custom setup by **ejecting** your application, this action will give you the
 full control of the webpack configuration, so you can twist it and do whatever you want with it.
 
  #### `npx` with `create-react-app`
 
-So now you know all the benefits of using `npx` and `create-react-app`, you can start figuring out how we can mix up these 2 libraries to simplify how we create a React application.
+So now you know all the benefits of using `npx` and `create-react-app`, you can start figuring out how we can mix up these 2 libraries to simplify the creation of a React application.
 
 Each time I start a new React project I just run:
 
@@ -83,7 +87,7 @@ Each time I start a new React project I just run:
 npx create-react-app awesomeApp
 ```
 
-That command will download (the latest-stable version) CRA and executes it, that's why we need to pass the name of the project we want to use.
+That command will download (the latest-stable version) CRA and executes it, that's why we need to pass the name of the project we want to use (*awesomeApp*).
 
 # Organize app structure
 
@@ -105,10 +109,10 @@ CRA offers a very basic folder structure for your app:
   |__package.json
   |__README.md
 ```
-> Some apps that I have in production are so simple that this is enough to work.
+> Some apps that I have in production are so simple that this folder structure is enough to work.
 
 When I know that a project will be a little more complicated than that, I change the folder structure so that it's easy for me and any other developer jump into the project.
-I like to split my components in two kinds:
+I split my components in two types:
 
  - **Components**
  - **Cointainers**
@@ -120,6 +124,7 @@ Following this idea, the folder structure that I use, looks like pretty much lik
   |__public/
   |__src/
     |__components/
+      |__ui/
     |__containers/
     |__utils/
     |__App.css
@@ -135,9 +140,19 @@ Following this idea, the folder structure that I use, looks like pretty much lik
   |__README.md
 ```
 
-I create a folder for each type of components that I have. Also I create a new folder called `utils/`, which I use for all the utility functions that I use across all the app.
-> **Note:** When I work with React Native, I just rename the `containers/` folder to `pages/`, just seems better naming for me.
+##### Components
 
+This is where I put all my UI components, that means, components that doesn't do to much of a logic, they are just there to present some information to the user and depend a little bit from the props
+that we passed in.
+
+The `ui/` folder holds all the components that are related to the User Interface (i.e. custom component for commons elements like <CustomInput /> or <CustomImg />)
+
+##### Containers
+
+This is where I put the *smart* components. A smart component is the one that controls the state of a particular part of the app. I use this type of components to wrap the most of the base markdown of the pages.
+
+Also I create a new folder called `utils/`, which I use for all the utility functions that I'd use across the app.
+> **Note:** When I work with React Native, I just rename the `containers/` folder to `pages/`, seems better name for me.
 
 # Organize Code
 
@@ -219,16 +234,16 @@ class HomeContainer extends React.Component {
 export default HomeContainer
 ```
 
-First, I import React, some people use destructuring to import `Component` also, I use the React variable since it's `Component` is available as a property of the default export of react.
+First, I import React, some people use destructuring to import `Component` also, I use the React variable since `Component` is available as a property of the default export of react.
 
-I also [don't use constructor](https://hackernoon.com/the-constructor-is-dead-long-live-the-constructor-c10871bea599), I prefer to use the [class properties](https://github.com/tc39/proposal-class-fields)
+I also [don't use constructor](https://hackernoon.com/the-constructor-is-dead-long-live-the-constructor-c10871bea599), I prefer to use [class properties](https://github.com/tc39/proposal-class-fields)
 to define the state, and use the lifecycles of react to fetch initial data or to update state on renders.
 
-I've always though that the use of `this` in javascript is really hardcore, but I liked though, seems to me like if you had all thw javascript wisdom just beacuse you use `.bind` in your code.
+I've always though that the use of `this` in javascript is really hardcore, but I liked though, seems to me like if you had all the javascript wisdom just beacuse `.bind` is in your code.
 I change all of that when working with React, (even tough I still think that using `this` is cool if that solves your problem) instead of the regular method declaration of the classes
-I use an arrow function assignment, so the `this` keyword works as expected and looks cleaner.
+I use an arrow function assignment, so `this` keyword works as expected and looks cleaner.
 
-The first line of the `render()` method is always the desctructuring of all the props I used across all the jsx I'd use on the component, this way,next time I come across this component,
+The first line of the `render()` method is always the desctructuring of all the props of the component, so next time I come across this component,
 I know easily which props I'm using without having to dig into all the jsx code (which supposed to be clean).
 
 And last but not least, I export the component at the end of the file.
@@ -261,7 +276,6 @@ So I still use the same destructuring-first technique for the props.
 When I need to do some state initialization of my functional components (i.e using `useState` hook) I use the `useEffect` hook, which is the replacement for the lifecycles on the class components.
 
 Finally I export my component at the end of file.
-
 
 ##### Handle JSX
 
@@ -326,26 +340,24 @@ function CheckBox(props) {
 ```
 
 There's a shortcut for `Fragment` that you can use instead: `<> ... </>` but you have to choose when to use it, since this shortcut **doesn't accept any prop**
-while the `Fragment` let you use the `key` prop, which you can use when creating elements within a loop.
+while the `Fragment` component let you use the `key` prop, which is helpfull when creating elements within a loop.
 
 # Organize your dependencies
 
 When I started to work with javascript, I love how the community helps to solve any kind of issue. Almost anything you would need when creating an app is likely to have it's own library/sdk than can help you with that.
-At first glance, that's good, but it can lead you to a __lazyness__ development where you are used to find a library for nearly any feature you'd need, so when you don't find the library, you start thinking that
+At first glance, that's good, but it can lead you to a ***lazyness*** development, where you are used to find a library for nearly any feature you'd need, so when you don't find the library, you start thinking that
 it might be hard to do (at least that was what I though :sad:).
 
-In order to remove that bad habit of **depend** a lot of my **dependencies** (that's what the name stands for ??), I started to take a look to the code that included on my projects, and that's how I realize that some of it
-it's really simple that It might wont worth to be included, and can be just a new file in the `utils/` folder.
+In order to remove that bad habit of **depend** a lot of my **dependencies** (that's what the name stands for ??), I started to take a look to the code that I included on my projects, and that's how I realize that some of it
+it's really simple that it might wont worth to be included, and can be just a new file in the `utils/` folder.
 
 I also try to think twice before install a dependencie that's kinda small (I used to include [momentjs](https://momentjs.com) on each project that I needed to present a simple formatted date)
-so my `node_modules/` folder doesn't grow too much.
-
+so my `node_modules/` folder doesn't grow up too much.
 
 ##### Versioning on your dependencies
 
-**Versionin** is a huge problem on the Javascript environment (I supposed that all languages have this problem), you install the version 9.0 of a dependecy, and it works perfectly on your React 16.3, but then after a few
-months (or event weeks) in production a new version of that libary came out, and you just deploy normally to production and `npm install` do its job. Next, you have a white screen (no matter how many times you reload the page) presented
-to your users.
+**Versionin** is a huge problem on the Javascript environment (I supposed that all languages have this problem). You install the version 9.x of a dependecy, and it works perfectly on your React 16.3, but then after a few
+months (or event weeks) in production a new version of that libary came out, and you just deploy normally to production, then `npm install` do it's job. Next, you have a white screen (no matter how many times you reload the page) presented to your users, ugh!!
 
 With npm, you can use [Range versions](https://github.com/npm/node-semver#ranges) to control the version of your dependecies, by default it's configure to use the **caret range**, that means patch and minor updates are allowed
 
@@ -364,17 +376,17 @@ So when you install a package, your package json looks pretty much like this:
 }
 ```
 
-Even though that `minor` and `patch` updates should not break your code, not everyone follow that rule, and sometimes you can struggle with that for a long time without notice that it's because of library version. That's why
-I like to **lock** the version of my dependecies (I just remove the caret or the tilde), so whenever I do a npm install again, the same version of the dependecy will be downloaded.
+Even though that `minor` and `patch` updates should not break your code, not everyone follow that rule, and sometimes you can struggle with that for a long time without notice that it's because of the library version.
+That's why I **lock** the version of my dependecies (I just remove the caret or the tilde), so whenever I do a npm install again, the same version of the dependecy will be downloaded.
 
 Of course, doing this will require that you keep up-to-date with the dependecies that are likely to be updated often.
 
 
 # Wire up
 
-One of the reasons why Javascript is well adopted, is the flexibility to write code, it doens't have an explicit convention on how to do it, but that can lead to technical debt when doing it, so I sugguest to stick to some rules
-when writting Javascript, the future yourself, will thank you for that (or any developer you work with).
+One of the reasons why Javascript is well adopted, is the flexibility on how to write code, it doesn't have an explicit convention on how to do it, but that can lead to technical debt when doing it, that's why I stick to some rules
+when working with Javascript, and also why you should do it too, the future yourself (or any developer you work with), will thank you for that.
 
-I presented you a small style guide that I like follow when working with React, you can use it, or twisted at your convinence, whatever makes you feel happy when programming!
+I presented you a small style guide that I follow when working with React, you can use it, or twisted at your convinence, whatever makes you feel happy when programming!
 
 Thanks for reading and happy coding!
