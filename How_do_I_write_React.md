@@ -145,7 +145,7 @@ Following this idea, the folder structure that I use, looks like pretty much lik
 This is where I put all my UI components, that means, components that doesn't do to much of a logic, they are just there to present some information to the user and depend a little bit from the props
 that we passed in.
 
-The `ui/` folder holds all the components that are related to the User Interface (i.e. custom component for commons elements like <CustomInput /> or <CustomImg />)
+The `ui/` folder holds all the components that are related to the User Interface (i.e. custom component for commons elements like `<CustomInput />` instead of `<input />` or `<CustomImg />` instead of `<img />`)
 
 ##### Containers
 
