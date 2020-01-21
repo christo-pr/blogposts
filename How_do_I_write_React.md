@@ -111,7 +111,7 @@ CRA offers a very basic folder structure for your app:
 ```
 > Some apps that I have in production are so simple that this folder structure is enough to work.
 
-When I know that a project will be a little more complicated than that, I change the folder structure so that it's easy for me and any other developer jump into the project.
+When I know that a project will be a little more complicated than that, I change the folder structure so that it's easy for me or any other developer make changes.
 I split my components in two types:
 
  - **Components**
@@ -184,7 +184,7 @@ We can point up some things here:
 
 ##### 1) It's a functional component instead of a class component:
   I used to use class components all the time, so that I could have an state and control everything with the lifecycles of React but
-  since hooks came out, all my components started to shrink a lot, and I liked it, so I haven't need to use a class component again since then.
+  since hooks came out, all my components started to shrink a lot, and I liked that, so I haven't needed a class component anymore.
 
 
 ##### 2) It does nothing but render a main container component:
