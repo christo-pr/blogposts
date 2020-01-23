@@ -1,5 +1,5 @@
 # Render dangerous content with React
-> This blogpost explain how React handle cross-site scripting and how we can 'bypass' that
+> This post explain how React handle cross-site scripting and how we can 'bypass' it
 
 ## Cross-site Scripting (XSS Attacks)
 
