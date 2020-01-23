@@ -1,7 +1,7 @@
-# Render dangerously content with React
-> This blogpost show how React handle one of the most common web vulnerability
+# Render dangerous content with React
+> This blogpost explain how React handle cross-site scripting and how we can 'bypass' that
 
-## Crosss-site Scripting (XSS Attacks)
+## Cross-site Scripting (XSS Attacks)
 
 Among all the web vunerabilities, one of the most common is [cross-site scripting](https://owasp.org/www-community/attacks/xss/), this type of vunerability allows the attackers to **inject** scripts on the page to get access to any sensitive information the browser and the site are sharing (cookies, tokens, etc...).
 
