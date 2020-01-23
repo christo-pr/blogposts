@@ -14,20 +14,21 @@ Although there are limitless varieties of XSS attacks, Javascript XSS attacks se
 
 There are 3 types of XSS attacks:
 
-**Stored XSS Attacks** occurs when the injected script is store on the server, this could be from a database, so each time the user request a resource from the server, this malicious scripts gets attached to the response.
+**Stored XSS Attacks** occurs when the injected script is store on the server (i.e. store on a database) so each time the user request a something from the server
+the malicious script is sent to the client.
 
-**Reflected XSS Attacks** happens when the malicious script is reflect on the web with the vulnerability, this could be due to a click on an email or any external source.
+**Reflected XSS Attacks** happens when the malicious script is reflect on the web that's vulnerable, this could be due to a click on an email link that's malformed or any other external source.
 
 **DOM Based XSS Attacks** is a vulnerability that occurs on the DOM (Document Object Model) instead of the HTML.
-Let's say you have a this snippet of code on your web app:
 
+Let's say you have this code on your app:
 ```html
 <script>
    document.write('<h1>My URL:</h1>: '+ document.baseURI);
 </script>
 ```
 
-Now, imagine someone visits your site using the URL `https://www.nicesite.com/index.html#<script>alert('test')</script>`, they will get the alert because the script writes the whatever comes on url to the document using `document.write`.
+Now, imagine someone visits your site using the URL `https://www.nicesite.com/index.html#<script>alert('test')</script>`, the script will be executed because the script above writes whatever comes on url to the document using `document.write`.
 We can point one of the main differences between this type of XSS attack and the Stored and Reflected: The servers **can't stop** this attack, since the *hash* part of the url is not being sent to the server on the request.
 
 ### Mitigate XSS Attacks
