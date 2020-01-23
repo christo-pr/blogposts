@@ -8,8 +8,6 @@ Among all the web vunerabilities, one of the most common is [cross-site scriptin
 This attack occurs when the data entered is comming from an untrusted source or the data that is sent to the user include dynamic content without been validated first.
 Although there are limitless varieties of XSS attacks, Javascript XSS attacks seems to be popular among hackers.
 
-----
-
 ### Types of XSS Attacks
 
 There are 3 types of XSS attacks:
@@ -28,18 +26,20 @@ Let's say you have this code on your app:
 </script>
 ```
 
-Now, imagine someone visits your site using the URL `https://www.nicesite.com/index.html#<script>alert('test')</script>`, the script will be executed because the script above writes whatever comes on url to the document using `document.write`.
-We can point one of the main differences between this type of XSS attack and the Stored and Reflected: The servers **can't stop** this attack, since the *hash* part of the url is not being sent to the server on the request.
+Now, imagine someone visits your site using the URL `https://www.nicesite.com/index.html#<script>alert('test')</script>`, the script will be executed because the code above writes whatever comes on url to the document using `document.write`.
 
-### Mitigate XSS Attacks
+We can point one of the main differences between this type of XSS attack and the Stored and Reflected: The servers **can't stop** this attack, since the *hash* (#) part of the url is not being sent to the server on the request.
 
-For most of the XSS Attacks the solution is simple, just [sanitize](https://medium.com/@abderrahman.hamila/what-sanitize-mean-and-why-sanitize-in-code-data-5c68c9f76164) your input data, even if comes from a ***trusted*** source and use the correct inputs and outputs
+### Prevent XSS Attacks
+
+For most of the XSS sttacks the solution is simple, just [sanitize](https://medium.com/@abderrahman.hamila/what-sanitize-mean-and-why-sanitize-in-code-data-5c68c9f76164) your input data, even if comes from a ***trusted*** source.
+Doing this will ensure that no matter what's the input or output, is always secure.
 
 Javascript offers us plenty ways to interact with the DOM, so we can works with dynamic content in an easy way, but we need to be carefull on how to use it, since it can make vulnerable our websites.
 
 #### Inputs & Outputs
 
-Here's a tiny list of the most common input and outputs
+Here's a tiny list of the most common input and outputs that can be dangerous to use.
 
 |         Inputs         |        Outputs      |
 |------------------------|---------------------|
@@ -47,16 +47,12 @@ Here's a tiny list of the most common input and outputs
 | `document.documentURI` | `element.innerHTML` |
 |     `location.href`    |    `element.src`    |
 
----
 
 ## React and cross-site scripting
 
----
+Nowadays all the web apps required some dynamism, from having a multiple step form that shows different question depending on your answers to a simple tables that filter out information, this is where Javascript enters to the ecuation.
 
-Nowadays all the web apps required some dynamism, from having a multiple step form that shows different question depending on your answers to a simple tables that filter out information based on the logged in user, all of this require depend a lot from Javascript.
-
-Back in the time, when Javascript vainilla was enough to get everything done (which still is, we just *'syntax-sugar'* it), one of the way you could handle insert dynamic content was using `innertHTML` property.
-According to the docs:
+Back in time, when Javascript vainilla was enough to get everything done (which still is, we just *'syntax-sugar'* it), one of the way you could handle insertion of dynamic content, was using `innertHTML` property.
 
 > Element.innerHTML:
 >
@@ -73,21 +69,21 @@ const newContent = "<script>alert('You've been hacked')</script>";
 el.innerHTML = newContent
 ```
 
-The first 2 lines create a variable that holds a plain string, then using `innerHTML` set the content of an element to be this variable, so far so good, nothing is harmless here.
+The first 2 lines create a variable that holds a plain string, then using `innerHTML` set the content of an element to be this variable, so far so good, nothing harmless here.
 
-On the next 2 lines of code, we do the same but this time, the string value is a and html `<script>` tag with an alert on it, what would you think is the output of this??
+On the next 2 lines of code we do the same, but this time, the string value is html with a `<script>` tag within it, so what would you think will be the output?
 
-Well if you though that this will result on an alert prompting to the user that he has been hacked, well you are **wrong**.
+Well, if you though that this will result on an alert prompting to the user that he has been hacked, well you are **wrong**.
 
 HTML5 specifications says that scripts inserted using `innerHTML` [shouldn't execute.](https://www.w3.org/TR/2008/WD-html5-20080610/dom.html#innerhtml0)
 
 ----
 
-##### Easy to be safe
+#### Easy to be safe
 
-React follows the philosophy *easy to be safe*, that's why we as developers should be explicit if we want to go for the *unsafe* path, and this is the case for the `dangerouslySetInnerHTML` prop.
+React follows the philosophy *"easy to be safe"*, that's why we as developers should be explicit if we want to go for the *unsafe* path, and this is the case for the `dangerouslySetInnerHTML` prop.
 
-This prop allows you to inject dynamic content to an element, all you need to do is pass and object with a single property: `__html`, that holds the html that you want to render:
+This prop allows you to inject dynamic html to an element, all you need to do is pass and object with a single property: `__html`, that holds the html (string format) that you want to render:
 
 ```js
 function App() {
@@ -103,28 +99,27 @@ function App() {
 }
 ```
 
-As you can see, seems a little odd that you have to pass an object, when it could be a simple string but this is done intentionally to remind you that it's dangerous and well you should avoid using it as much as possible.
+As you can see, seems a little odd that you have to pass an object when it could be a simple string, but this is done intentionally, to remind you that it's dangerous and you should avoid using it as much as possible.
 
 
 #### innerHTML vs dangerouslySetInnerHTML
 
-Writing React doesn't mean that you can't use the features that Javascript offer us, that beign said, you can use `innerHTML` to add the dynamic html to a react component and it will work the same (both will update the node with the html), but it can lead to undesire and performan issues.
+Writing React doesn't mean that you can't use the features that Javascript offer us, you can use `innerHTML` to add the dynamic html to a react component and it will work the same (both will update the node with the html), but it can lead to undesire and performant issues.
 
 React uses a **virtual DOM** to compare what's been update and needs a re-render, using `dangerouslySetInnerHTML` tell React to ignore this html, so it doesn't include it on the comparations agains the virtual DOM.
+When using `innerHTML` this "ignore" feature goes away, also the content could be replaced on the next re-render
 
-Another issue when using `innerHTML` is that due to this virtual DOM comparation, the dynamic html could be replace on the next re-render.
-
-Since both properties works the same (in fact `dangerouslySetInnerHTML` implements `innerHTML` to set the content) they both share the same vulnerabilities, and they are fixable with the same method: Sanitize your inpur sources.
+Since both properties works the same (in fact `dangerouslySetInnerHTML` implements `innerHTML` to set the content) they both share the same vulnerabilities, and they are fixable with the same method: sanitize your input sources.
 
 ## Render the danger
 
-Now what happens when you want to use `dangerouslySetInnerHTML` but also need to execute any `script` tag that comes inside the html? That's agains HTML5 specifications, but if we dig a little bit more on what `innerHTML` do to inject the html we can found something interesting:
+Now what happens when you want to use `dangerouslySetInnerHTML` but also need to execute any `script` tag that comes inside the html? That's againts HTML5 specifications, but if we dig a little bit more on what `innerHTML` do to inject the html we can found something interesting:
 
 > The specified value is parsed as HTML or XML (based on the document type), resulting in a **DocumentFragment** object representing the new set of DOM nodes for the new elements.
 
-So, this **DocumentFragment** creates a lightweigh version of the `document` that can hold nodes, the main difference,is that since is a fragment, it doesn't actually a part of the active `document`.
+This **DocumentFragment** is a lightweight version of the `document`, it can have child nodes, the main difference is that since is a fragment, is not actually a part of the active/main `document`.
 
-Good for us, we can create a **DocumentFragment** using the [document.Range]() object.
+We can create a **DocumentFragment** using the [document.Range](https://developer.mozilla.org/en-US/docs/Web/API/Range) API.
 
 ```js
 const html = `
@@ -133,13 +128,13 @@ const html = `
 const node = document.createRange().createContextualFragment(html);
 ```
 
-This snippet of code will create a `DocumentFragment` object and parse the value of the `html` variable, and store the result on a variable called `node`. All we have to do is to render this variable:
+This code snippet will create a `DocumentFragment` object, parse the value of the `html` variable and store the result on a variable called `node`. All we have to do is render this variable:
 
 ```js
 element.appenChild(node)
 ```
 
-If we translate all of this to a React component we end up with something like:
+If we translate all of this to a React component we end up with something like this:
 
 ```js
 import React, { useEffect, useRef } from 'react'
@@ -178,9 +173,9 @@ This way we could pass a string with html content that includes `<script>` tags,
 
 ## dangerously-set-html-content
 
-[dangerously-set-html-content](https://www.npmjs.com/package/dangerously-set-html-content) ss a tiny (297B Gzipped), no-dependencies, library that allows you to render dynamic html and execute any `scripts` tag within it.
+[dangerously-set-html-content](https://www.npmjs.com/package/dangerously-set-html-content) is a tiny (**297B Gzipped**), **no-dependencies**, library that allows you to render dynamic html and execute any `scripts` tag within it.
 
-Just add it to your project:
+1) Add it to your project:
 
 ```bash
 yarn add dangerously-set-html-content
@@ -188,7 +183,7 @@ yarn add dangerously-set-html-content
 // npm install dangerously-set-html-content --save
 ```
 
-and you can start using it;
+2) Start using it:
 
 ```js
 import React from 'react'
@@ -210,7 +205,8 @@ function App() {
 }
 ```
 
-Of course this doesn't prevent any attack (in fact, does the opposite of that), but sometimes you can find the needed of rendering and execute (if it has `script` tags) dynamic html content
+Of course this doesn't prevent any attack (in fact, does the opposite of that), but sometimes this functionally could be what you are looking for.
+> I build this beacuse I actually needed this functionality.
 
 ## Conclusions
 
