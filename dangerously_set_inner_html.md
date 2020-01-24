@@ -1,11 +1,11 @@
 # Render dangerous content with React
-> This post explain how React handle cross-site scripting and how we can 'bypass' it
+> This post explain how React handle cross-site scripting and how we can 'bypass' it (**NOTE: only if you needed**)
 
 ## Cross-site Scripting (XSS Attacks)
 
 Among all the web vunerabilities, one of the most common is [cross-site scripting](https://owasp.org/www-community/attacks/xss/), this type of vunerability allows the attackers to **inject** scripts on the page to get access to any sensitive information the browser and the site are sharing (cookies, tokens, etc...).
 
-This attack occurs when the data entered is comming from an untrusted source or the data that is sent to the user include dynamic content without been validated first.
+This attack occurs when the data entered in your web app is comming from an untrusted source or the data that is sent to the user include dynamic content without been validated first.
 Although there are limitless varieties of XSS attacks, Javascript XSS attacks seems to be popular among hackers.
 
 ### Types of XSS Attacks
@@ -77,6 +77,8 @@ Well, if you though that this will result on an alert prompting to the user that
 
 HTML5 specifications says that scripts inserted using `innerHTML` [shouldn't execute.](https://www.w3.org/TR/2008/WD-html5-20080610/dom.html#innerhtml0)
 
+This way HTML5 helps us to prevent XSS.
+
 ----
 
 #### Easy to be safe
@@ -113,11 +115,46 @@ Since both properties works the same (in fact `dangerouslySetInnerHTML` implemen
 
 ## Render the danger
 
-Now what happens when you want to use `dangerouslySetInnerHTML` but also need to execute any `script` tag that comes inside the html? That's againts HTML5 specifications, but if we dig a little bit more on what `innerHTML` do to inject the html we can found something interesting:
+React just prevent the js execution of `script` tags within the html we are inserting, so we are still expose to an XSS attack:
+
+```js
+import React from 'react'
+
+function MaliciousComponent() {
+  const html = `<img src="/path/no/exists/" onerror="alert('hacked')" />`
+
+  return (
+    <div dangerouslySetInnerHTML={{ __html: html }}/> // will execute the alert
+  )
+}
+
+```
+
+And how about the `script` tags?
+
+```js
+import React from 'react'
+
+function MaliciousComponent() {
+  const html = `
+  <div>Nice content</div>
+  <script>
+    alert('testing')
+  </script>`
+
+  return (
+    <div dangerouslySetInnerHTML={{ __html: html }}/> // will execute it??
+  )
+}
+```
+
+I mention before, `dangerouslySetInnerHTML` implements `innerHTML`, so it wont execute any script tag at all.
+
+So what happens if you need to execute any `script` tag that comes inside the html? That's against HTML5 specifications, but you could use **DocumentFragments:**
 
 > The specified value is parsed as HTML or XML (based on the document type), resulting in a **DocumentFragment** object representing the new set of DOM nodes for the new elements.
 
-This **DocumentFragment** is a lightweight version of the `document`, it can have child nodes, the main difference is that since is a fragment, is not actually a part of the active/main `document`.
+This **DocumentFragment** is a lightweight version of the `document` and you can add childs to it, the main difference is that since is a fragment, is not actually a part of the active/main `document`.
 
 We can create a **DocumentFragment** using the [document.Range](https://developer.mozilla.org/en-US/docs/Web/API/Range) API.
 
@@ -215,7 +252,7 @@ but still is better to known what are we dealing with as frontend developers.
 
 Additionally of what React offers us, there are several techniques that can help you to prevent an attack, so if you are having a problem of this type just head to the docs and you'll probably find the solution.
 
-While 99% of the times all this *magic* behind React works perfect for us, sometimes we can found ourself struggling with it, but at the end is just Javascript so embracing both will help us to find the solution to our problem.
+It's not recommened to bypass any security feature, since it's there for a reason, but in order to get the job done, sometimes you need to get your hand dirty! (XD) and while 99% of the times all this *magic* behind React works perfect for us, sometimes we can found ourself struggling with it, just remember, is Javascript, so embracing the best of both may help you to find the solution to the problem.
 
 Thanks!
 
